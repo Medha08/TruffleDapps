@@ -10,7 +10,7 @@ contract Adoption{
    }
 
    function adoptPet(uint _petId) public returns (uint){
-       require(_petId >=0 && _petId<= 15);
+       require(_petId >=0  && _petId<= 15);
         adopters[_petId] =msg.sender;
         return _petId;
    }

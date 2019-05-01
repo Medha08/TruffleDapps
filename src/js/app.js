@@ -35,7 +35,7 @@ App = {
     }else if(window.web3){
       App.web3Provider = window.web3.currentProvider;
     }else{
-      App.web3Provider = new Web3.providers.HttpProvider('http://localhost:8545');
+      App.web3Provider = new Web3.providers.HttpProvider('http://localhost:7545');
     }
 
     web3 = new Web3(App.web3Provider);
@@ -67,12 +67,12 @@ App = {
   markAdopted: function(adopters, account) {
 
     var adoptionInstance;
-    App.contract.Adoption.deployed().then(function(instance){
+    App.contracts.Adoption.deployed().then(function(instance){
       adoptionInstance = instance;
 
       return adoptionInstance.getAdopters.call();
-    }).then(function(adotpters){
-      for(i=0;i<adopters.length;i++){
+    }).then(function(adopters){
+      for(i=0;i< adopters.length;i++){
         if(adopters[i] !== '0x0000000000000000000000000000000000000000' ){
           $('.panel-pet').eq(i).find('button').text('Success').attr('disabled', true);
         }
@@ -88,21 +88,23 @@ App = {
     var petId = parseInt($(event.target).data('id'));
 
     var adoptionInstance;
+  
 
     web3.eth.getAccounts(function(err,accounts){
-      if(error){
-        console.log(error);
+      if(err){
+        console.log(err);
       }
 
       var account = accounts[0];
-      App.contract.Adoption.deployed().then(function(instance){
+      
+      App.contracts.Adoption.deployed().then(function(instance){
         
         adoptionInstance = instance;
 
         return adoptionInstance.adoptPet(petId,{from:account}).then(function(result){
           return App.markAdopted();
         }).catch(function(err){
-          console.log(err.message);
+          console.log("Error",err.message);
         })
   
       });
